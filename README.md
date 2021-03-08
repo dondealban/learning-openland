@@ -5,7 +5,8 @@ This is a repository set up as my personal exercise for learning land use/cover 
 - [An OpenLand Workflow Example](#workflow)
     + [Load Packages](#load_packages) 
     + [Load Rasters](#load_rasters)
-    + [Extracting Data from the Raster Time-Series](#extract_data)
+    + [Extract Data from the Raster Time-Series](#extract_data)
+    + [Edit Categories](#edit_categories)
 
 <a name="workflow"></a>
 
@@ -49,7 +50,7 @@ max values :             13,             13,             13,             13,    
 
 <a name="extract_data"></a>
 
-### C. Extracting Data from the Raster Time-Series
+### C. Extract Data from the Raster Time-Series
 ```R
 SL_2002_2014 <- contingencyTable(input_raster = SaoLourencoBasin, pixelresolution = 30)
 SL_2002_2014
@@ -112,4 +113,40 @@ $totalArea
 
 $totalInterval
 [1] 12
+```
+
+<a name="edit_categories"></a>
+
+### C. Edit Categories
+The `tb_legend` object should be edited with the appropriate names and colors associated with the land cover categories. to edit the category names and the color of categories in the legend, we do the following:
+```R
+## Edit the category name
+SL_2002_2014$tb_legend$categoryName <- factor(c("Ap", "FF", "SA", "SG", "aa", "SF", "Agua", "Iu", "Ac", "R", "Im"),
+                                       levels = c("FF", "SF", "SA", "SG", "aa", "Ap", "Ac", "Im", "Iu", "Agua", "R"))
+
+## Add the colors of each category by using the same order of the legend, which can be done by specifying the color name (e.g., "black") or the HEX value (e.g., #000000)
+SL_2002_2014$tb_legend$color <- c("#FFE4B5", "#228B22", "#00FF00", "#CAFF70", 
+                                  "#EE6363", "#00CD00", "#436EEE", "#FFAEB9", 
+                                  "#FFA54F", "#68228B", "#636363")
+```
+After executing these steps, we can check the edited names and colors of the land cover categories by using:
+```R
+SL_2002_2014$tb_legend
+```
+The summary description is shown as follows:
+```R
+# A tibble: 11 x 3
+   categoryValue categoryName color  
+           <int> <fct>        <chr>  
+ 1             2 Ap           #FFE4B5
+ 2             3 FF           #228B22
+ 3             4 SA           #00FF00
+ 4             5 SG           #CAFF70
+ 5             7 aa           #EE6363
+ 6             8 SF           #00CD00
+ 7             9 Agua         #436EEE
+ 8            10 Iu           #FFAEB9
+ 9            11 Ac           #FFA54F
+10            12 R            #68228B
+11            13 Im           #636363
 ```
