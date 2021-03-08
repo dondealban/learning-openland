@@ -30,10 +30,39 @@ SL_2002_2014 # Inspect the contingency table description
 ## Edit the category name
 SL_2002_2014$tb_legend$categoryName <- factor(c("Ap", "FF", "SA", "SG", "aa", "SF", "Agua", "Iu", "Ac", "R", "Im"),
                                               levels = c("FF", "SF", "SA", "SG", "aa", "Ap", "Ac", "Im", "Iu", "Agua", "R"))
+
 ## Add the colors of each category by using the same order of the legend, which can be done by specifying the color name (e.g., "black") or the HEX value (e.g., #000000)
 SL_2002_2014$tb_legend$color <- c("#FFE4B5", "#228B22", "#00FF00", "#CAFF70", 
                                   "#EE6363", "#00CD00", "#436EEE", "#FFAEB9", 
                                   "#FFA54F", "#68228B", "#636363")
+
 SL_2002_2014$tb_legend # Check edited names and colors
+
+# QUANTIFY AND VISUALISE LULCC -----------
+## Generate evolution barplot
+barplotLand(dataset = SL_2002_2014$lulc_Multistep, 
+            legendtable = SL_2002_2014$tb_legend,
+            xlab = "Year",
+            ylab = bquote("Area (" ~ km^2~ ")"),
+            area_km2 = TRUE)
+
+## Generate barplot of net and gross changes
+netgrossplot(dataset = SL_2002_2014$lulc_Multistep,
+             legendtable = SL_2002_2014$tb_legend,
+             xlab = "LUC Category",
+             ylab = bquote("Area (" ~ km^2 ~ ")"),
+             changesLabel = c(GC = "Gross changes", NG = "Net Gain", NL = "Net Loss"),
+             color = c(GC = "gray70", NG = "#006400", NL = "#EE2C2C"))
+
+## Generate chord diagram of land cover transitions
+chordDiagramLand(dataset = SL_2002_2014$lulc_Onestep,
+                 legendtable = SL_2002_2014$tb_legend)
+
+
+
+
+
+
+
 
 
