@@ -403,6 +403,25 @@ plot(testSL$category_lvlLoss, labels = c(leftlabel = bquote("Loss Area (" ~ km^2
                               leg_curv = c(x = 5/10, y = 5/10))
 ```
 
+#### Transition-Level Intensity Analysis
+For transition-level IA, we can plot the visualisation graphs as follows:
++ Gain of the `n` Category 'Ap'
+```R
+plot(testSL$transition_lvlGain_n, labels = c(leftlabel = bquote("Gain of Ap (" ~ km^2 ~ ")"),
+                                  rightlabel = "Intensity Gain of Ap (%)"),
+                                  marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                                  leg_curv = c(x = 5/10, y = 5/10))
+```
+
++ Loss of the `m` Category 'SG'
+```R
+plot(testSL$transition_lvlLoss_m, labels = c(leftlabel = bquote("Loss of SG (" ~ km^2 ~ ")"),
+                                  rightlabel = "Intensity Loss of SG (%)"),
+                                  marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                                  leg_curv = c(x = 1/10, y = 5/10))
+```
+
+
 <a name="references"></a>
 
 ## References
