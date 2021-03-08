@@ -7,7 +7,7 @@ This is a repository set up as my personal exercise for learning land use/cover 
     + [Load Rasters](#load_rasters)
     + [Extract Data from the Raster Time-Series](#extract_data)
     + [Edit Categories](#edit_categories)
-    + [Quantify Net and Gross Gain and Loss](#net_gross_gain_loss)
+    + [Quantify and Visualise Land Cover Change](#quantify_visualise)
     + [Implement Intensity Analysis](#intensity_analysis)
 - [References](#references)
 
@@ -19,9 +19,10 @@ Here, I implemented the workflow from the [vignette](https://cran.r-project.org/
 <a name="load_packages"></a>
 
 ### A. Load Packages
-Prior to loading packages, you can set your working directory using `setwd()` and indicate your working directory path. The `OpenLand` R package or library was used for this exercise. To load the package we can write:
+Prior to loading packages, you can set your working directory using `setwd()` and indicate your working directory path. The `OpenLand` and `tmap` R packages/libraries wer used for this exercise. To load the packages we can write:
 ```R
-library(OpenLand)             # Package for quantitative analysis and visualisation of land use/cover change 
+library(OpenLand)             # Package for quantitative analysis and visualisation of land use/cover change
+library(tmap)                 # Package for generating thematic maps
 ```
 
 <a name="load_rasters"></a>
@@ -156,8 +157,8 @@ The summary description is then shown as follows:
 
 <a name="net_gross_gain_loss"></a>
 
-### E. Quantify Net and Gross Gains and Losses
-Here, we quantify the net and gross changes of all land cover categories, specifically both their gains and losses, and generate visualisations of the land cover changes/transitions.
+### E. Quantify and Visualise Land Cover Changes
+Here, we quantify the net and gross changes of all land cover categories, specifically both their gains and losses, and generate visualisations of the areal extents of the land cover changes/transitions.
 
 #### Evolution Barplot of Total Areal Extent of Land Cover Categories per Time-Point
 First, we can generate the evolution barplot to visualise the total areal extent of each land cover category per time-point as follows:
@@ -180,7 +181,109 @@ netgrossplot(dataset = SL_2002_2014$lulc_Multistep,
              color = c(GC = "gray70", NG = "#006400", NL = "#EE2C2C"))
 ```
 
+#### Chord Diagram of Land Cover Transitions
+Next, we can generate a chord diagram to visualise the gross transitions of land cover across the entire time-period as follows:
+```R
+chordDiagramLand(dataset = SL_2002_2014$lulc_Onestep,
+                 legendtable = SL_2002_2014$tb_legend)
+```
 
+#### Sankey Diagrams of Land Cover Transitions
+Next, we can generate a two variations of Sankey diagrams to visualise the gross transitions of land cover: first, across the entire time-period; and second, per time-interval, as follows:
+
++ Entire time-period (one-step)
+```R
+sankeyLand(dataset = SL_2002_2014$lulc_Onestep,
+           legendtable = SL_2002_2014$tb_legend)
+```
+
++ All time-intervals (multi-step)
+```R
+sankeyLand(dataset = SL_2002_2014$lulc_Multistep,
+           legendtable = SL_2002_2014$tb_legend)
+```
+
+#### Sankey Diagrams of Land Cover Transitions
+Finally, we can generate a map showing the accumulated changes in pixels at each of the four time-intervals between the entire 2002-2014 time-period as follows:
+```R
+testacc <- acc_changes(SaoLourencoBasin)
+testacc
+```
+The summary of the generated raster layer and table are as follows:
+```R
+[[1]]
+class      : RasterLayer 
+dimensions : 6372, 6546, 41711112  (nrow, ncol, ncell)
+resolution : 30, 30  (x, y)
+extent     : 654007.5, 850387.5, 8099064, 8290224  (xmin, xmax, ymin, ymax)
+crs        : +proj=utm +zone=21 +south +ellps=GRS80 +units=m +no_defs 
+source     : /private/var/folders/lr/1nm725q96qb0ssqg3qv8x1b00000gn/T/Rtmpk8zxlK/raster/r_tmp_2021-03-08_131306_2333_99988.grd 
+names      : layer 
+values     : 0, 2  (min, max)
+
+
+[[2]]
+# A tibble: 3 x 3
+  PxValue       Qt Percent
+    <int>    <int>   <dbl>
+1       0 21819779   87.6 
+2       1  2787995   11.2 
+3       2   301086    1.21
+```
+We can also plot the map with the `tmap` function as follows:
+```R
+tmap_options(max.raster = c(plot = 41711112, view = 41711112))
+
+acc_map <- tmap::tm_shape(testacc[[1]]) +
+  tmap::tm_raster(
+    style = "cat",
+    labels = c(
+      paste0(testacc[[2]]$PxValue[1], " Change", " (", round(testacc[[2]]$Percent[1], 2), "%", ")"),
+      paste0(testacc[[2]]$PxValue[2], " Change", " (", round(testacc[[2]]$Percent[2], 2), "%", ")"),
+      paste0(testacc[[2]]$PxValue[3], " Changes", " (", round(testacc[[2]]$Percent[3], 2), "%", ")")
+    ),
+    palette = c("#757575", "#FFD700", "#CD0000"),
+    title = "Changes in the interval \n2002 - 2014"
+  ) +
+  tmap::tm_legend(
+    position = c(0.01, 0.2),
+    legend.title.size = 1.2,
+    legend.title.fontface = "bold",
+    legend.text.size = 0.8
+  ) +
+  tmap::tm_compass(type = "arrow",
+                   position = c("right", "top"),
+                   size = 3) +
+  tmap::tm_scale_bar(
+    breaks = c(seq(0, 40, 10)),
+    position = c(0.76, 0.001),
+    text.size = 0.6
+  ) +
+  tmap::tm_credits(
+    paste0(
+      "Case of Study site",
+      "\nAccumulate changes from 2002 to 2014",
+      "\nData create with OpenLand package",
+      "\nLULC derived from Embrapa Pantanal, Instituto SOS Pantanal, and WWF-Brasil 2015."
+    ),
+    size = 0.7,
+    position = c(0.01, -0, 01)
+  ) +
+  tmap::tm_graticules(
+    n.x = 6,
+    n.y = 6,
+    lines = FALSE,
+    #alpha = 0.1
+    labels.rot = c(0, 90)
+  ) +
+  tmap::tm_layout(inner.margins = c(0.02, 0.02, 0.02, 0.02))
+
+tmap::tmap_save(acc_map,
+                filename = "acc_map.png",
+                width = 7,
+                height = 7)
+
+```
 
 <a name="intensity_analysis"></a>
 
