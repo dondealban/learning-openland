@@ -374,9 +374,34 @@ Slot "transitionStationarity":
 5 Iu        1     4 avoided SG   N    
 6 R         1     4 avoided SG   N
 ```
+The following can be done to visualise the outputs from Intensity Analysis at three levels: interval, category, and transition:
 
+#### Interval-Level Intensity Analysis
+For interval-level IA, we can plot the visualisation graphs as follows:
+```R
+plot_intervalIA <- plot(testSL$interval_lvl, labels = c(leftlabel = "Interval Change Area (%)",
+                                             rightlabel = "Annual Change Area (%)"),
+                                             marginplot = c(-8, 0), labs = c("Changes", "Uniform Rate"), 
+                                             leg_curv = c(x = 2/10, y = 3/10))
+```
 
+#### Category-Level Intensity Analysis
+For category-level IA, we can plot the visualisation graphs as follows:
++ Gain Category
+```R
+plot(testSL$category_lvlGain, labels = c(leftlabel = bquote("Gain Area (" ~ km^2 ~ ")"),
+                              rightlabel = "Intensity Gain (%)"),
+                              marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                              leg_curv = c(x = 5/10, y = 5/10))
+```
 
++ Loss Category
+```R
+plot(testSL$category_lvlLoss, labels = c(leftlabel = bquote("Loss Area (" ~ km^2 ~ ")"),
+                              rightlabel = "Loss Intensity (%)"),
+                              marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                              leg_curv = c(x = 5/10, y = 5/10))
+```
 
 <a name="references"></a>
 
