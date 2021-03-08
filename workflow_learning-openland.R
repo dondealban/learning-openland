@@ -151,3 +151,19 @@ plot_category_l_IA <- plot(testSL$category_lvlLoss, labels = c(leftlabel = bquot
                                                     marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
                                                     leg_curv = c(x = 5/10, y = 5/10))
 plot(plot_category_l_IA)
+
+## Transition-Level Intensity Analysis
+## Gain of the `n` Category 'Ap'
+plot_transition_g_IA <- plot(testSL$transition_lvlGain_n,
+                             labels = c(leftlabel = bquote("Gain of Ap (" ~ km^2 ~ ")"),
+                             rightlabel = "Intensity Gain of Ap (%)"),
+                             marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                             leg_curv = c(x = 5/10, y = 5/10))
+plot(plot_transition_g_IA)
+## Loss of the `m` Category 'SG'
+plot_transition_l_IA <- plot(testSL$transition_lvlLoss_m, 
+                             labels = c(leftlabel = bquote("Loss of SG (" ~ km^2 ~ ")"),
+                             rightlabel = "Intensity Loss of SG (%)"),
+                             marginplot = c(.3, .3), labs = c("Categories", "Uniform Rate"), 
+                             leg_curv = c(x = 1/10, y = 5/10))
+plot(plot_transition_l_IA)
