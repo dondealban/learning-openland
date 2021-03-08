@@ -58,10 +58,76 @@ netgrossplot(dataset = SL_2002_2014$lulc_Multistep,
 chordDiagramLand(dataset = SL_2002_2014$lulc_Onestep,
                  legendtable = SL_2002_2014$tb_legend)
 
+## Generate one-step Sankey diagram
+sankeyLand(dataset = SL_2002_2014$lulc_Onestep,
+           legendtable = SL_2002_2014$tb_legend)
+
+## Generate multi-step Sankey diagram
+sankeyLand(dataset = SL_2002_2014$lulc_Multistep,
+           legendtable = SL_2002_2014$tb_legend)
+
+## Generate map of accumulated changes over all time-intervals
+testacc <- acc_changes(SaoLourencoBasin)
+testacc
+
+tmap_options(max.raster = c(plot = 41711112, view = 41711112))
+acc_map <- tmap::tm_shape(testacc[[1]]) +
+  tmap::tm_raster(
+    style = "cat",
+    labels = c(
+      paste0(testacc[[2]]$PxValue[1], " Change", " (", round(testacc[[2]]$Percent[1], 2), "%", ")"),
+      paste0(testacc[[2]]$PxValue[2], " Change", " (", round(testacc[[2]]$Percent[2], 2), "%", ")"),
+      paste0(testacc[[2]]$PxValue[3], " Changes", " (", round(testacc[[2]]$Percent[3], 2), "%", ")")
+    ),
+    palette = c("#757575", "#FFD700", "#CD0000"),
+    title = "Changes in the interval \n2002 - 2014"
+  ) +
+  tmap::tm_legend(
+    position = c(0.01, 0.2),
+    legend.title.size = 1.2,
+    legend.title.fontface = "bold",
+    legend.text.size = 0.8
+  ) +
+  tmap::tm_compass(type = "arrow",
+                   position = c("right", "top"),
+                   size = 3) +
+  tmap::tm_scale_bar(
+    breaks = c(seq(0, 40, 10)),
+    position = c(0.76, 0.001),
+    text.size = 0.6
+  ) +
+  tmap::tm_credits(
+    paste0(
+      "Case of Study site",
+      "\nAccumulate changes from 2002 to 2014",
+      "\nData create with OpenLand package",
+      "\nLULC derived from Embrapa Pantanal, Instituto SOS Pantanal, and WWF-Brasil 2015."
+    ),
+    size = 0.7,
+    position = c(0.01, -0, 01)
+  ) +
+  tmap::tm_graticules(
+    n.x = 6,
+    n.y = 6,
+    lines = FALSE,
+    #alpha = 0.1
+    labels.rot = c(0, 90)
+  ) +
+  tmap::tm_layout(inner.margins = c(0.02, 0.02, 0.02, 0.02))
+## Save map output as png file
+tmap::tmap_save(acc_map,
+                filename = "acc_map.png",
+                width = 7,
+                height = 7)
 
 
+# IMPLEMENT INTENSITY ANALYSIS -----------
 
-
+## We implement the Intensity Analysis framework by using the function `intensityAnalysis()`.
+## Note here that for the transition-level Intensity Analysis, the selected `category_n` (or 'To N') is "Ap"
+## and `category_m` is "SG" (or 'From M'):
+testSL <- intensityAnalysis(dataset = SL_2002_2014, category_n = "Ap", category_m = "SG")
+names(testSL) # Inspect list of objects
 
 
 
