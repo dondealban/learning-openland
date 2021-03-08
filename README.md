@@ -7,6 +7,7 @@ This is a repository set up as my personal exercise for learning land use/cover 
     + [Load Rasters](#load_rasters)
     + [Extract Data from the Raster Time-Series](#extract_data)
     + [Edit Categories](#edit_categories)
+    + [Quantify Net and Gross Gain and Loss](#net_gross_gain_loss)
     + [Implement Intensity Analysis](#intensity_analysis)
 - [References](#references)
 
@@ -153,9 +154,37 @@ The summary description is then shown as follows:
 11            13 Im           #636363
 ```
 
+<a name="net_gross_gain_loss"></a>
+
+### E. Quantify Net and Gross Gains and Losses
+Here, we quantify the net and gross changes of all land cover categories, specifically both their gains and losses, and generate visualisations of the land cover changes/transitions.
+
+#### Evolution Barplot of Total Areal Extent of Land Cover Categories per Time-Point
+First, we can generate the evolution barplot to visualise the total areal extent of each land cover category per time-point as follows:
+```R
+barplotLand(dataset = SL_2002_2014$lulc_Multistep, 
+            legendtable = SL_2002_2014$tb_legend,
+            xlab = "Year",
+            ylab = bquote("Area (" ~ km^2~ ")"),
+            area_km2 = TRUE)
+```
+
+#### Barplot of Net and Gross Changes of Land Cover Categories
+Next, we can generate the barplot to visualise the net and gross changes of land cover categories as follows:
+```R
+netgrossplot(dataset = SL_2002_2014$lulc_Multistep,
+             legendtable = SL_2002_2014$tb_legend,
+             xlab = "LUC Category",
+             ylab = bquote("Area (" ~ km^2 ~ ")"),
+             changesLabel = c(GC = "Gross changes", NG = "Net Gain", NL = "Net Loss"),
+             color = c(GC = "gray70", NG = "#006400", NL = "#EE2C2C"))
+```
+
+
+
 <a name="intensity_analysis"></a>
 
-### E. Implement Intensity Analysis
+### F. Implement Intensity Analysis
 The **Intensity Analysis** framework [(Aldwaik & Pontius 2012)](#aldwaik_pontius_2012) is a quantitative method to analyse land cover change over time for an area of interest to summarise the change within time-intervals. Different types of information are extracted at three levels of analysis: interval, category, and transition, which progress from general to more detailed levels. At the ***interval level***, the total change in each time-interval is analysed to examine how the size and annual rate of change vary across time-intervals (i.e., to answer in which time-intervals are the overall annual rate of change relatively slow or fast). At the ***category level***, each land cover category is examined to measure how the size and intensity of both gross losses and gross gains vary across space (i.e., to answer which categories are relatively dormant versus active in a given time-interval, and to determine if the pattern is stable across time-intervals). Finally, at the ***transition level***, a particular transition is analysed to examine how the size and intensity of the transition vary among categories available for that transition (i.e., to answer which transitions are intensively targeted versus avoided by a given land category in a given time-interval, and to determine if the pattern is stable across time-intervals).
 
 Previously, I implemented the Intensity Analysis framework for my land change studies using the [Microsoft Excel Macro](https://sites.google.com/site/intensityanalysis/home) and using the `intensity.analysis` R package implementation [(Pontius & Khallaghi 2019)](https://cran.r-project.org/web/packages/intensity.analysis/index.html), of which the latter I had also created a working tutorial for learning the R package implementation (see this GitHub [repository](https://github.com/dondealban/learning-intensity-analysis)). This time, I am testing the implementation using the `OpenLand` R package.
