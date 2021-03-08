@@ -203,7 +203,7 @@ sankeyLand(dataset = SL_2002_2014$lulc_Multistep,
            legendtable = SL_2002_2014$tb_legend)
 ```
 
-#### Sankey Diagrams of Land Cover Transitions
+#### Map of Accumulated Changes over all Time-Intervals
 Finally, we can generate a map showing the accumulated changes in pixels at each of the four time-intervals between the entire 2002-2014 time-period as follows:
 ```R
 testacc <- acc_changes(SaoLourencoBasin)
